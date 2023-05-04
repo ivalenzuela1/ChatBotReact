@@ -57,17 +57,3 @@ app.post("/ask", async (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server listening on ${PORT}`);
 });
-
-/*
-let key = "no data";
-fs.readFile("/Users/ivalenzuela/Desktop/react_key.txt", "utf8", (err, data) => {
-  if (err) {
-    console.log(err);
-    return;
-  }
-  key = data;
-});
-
-console.log("THIS IS THE KEY");
-console.log(key);
-*/
