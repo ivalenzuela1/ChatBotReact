@@ -39,31 +39,28 @@ app.get("*", (req, res) => {
 
 app.post("/upload", uploadPdf, (req, res) => {
   const buffer = req.file.buffer;
-  pdf(buffer).then((data) => {
-    res.send(data.text);
+  pdf(buffer).then(async (data) => {
+    try {
+      const prompt = `What is the last name of the candidate in the resume listed here: ${data.text}`;
+      const response = await openai.createCompletion({
+        model: "text-davinci-003",
+        prompt: prompt,
+        temperature: 0,
+        max_tokens: 1000,
+      });
+      const completion = response.data.choices[0].text;
+      return res.status(200).json({
+        success: true,
+        message: completion,
+        all: response.data.choices,
+      });
+    } catch (error) {
+      console.log(error.message);
+    }
   });
 });
 
-app.post("/upload22", (req, res, next) => {
-  let uploadFile = req.body.file;
-  const fileName = req.body;
-  console.log("Uploaded file");
-  console.log(fileName);
-
-  /*
-  uploadFile.mv(
-    `${__dirname}/public/files/${fileName}`,
-    function (err) {
-      if (err) {
-        return res.status(500).send(err)
-      }
-      res.json({
-        file: `public/${req.files.file.name}`,
-      })
-    },
-  )
-  */
-});
+//res.send(data.text);
 
 app.post("/ask", async (req, res) => {
   const prompt = req.body.prompt;
