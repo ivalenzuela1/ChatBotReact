@@ -42,7 +42,7 @@ function App() {
     }
   };
 
-  const fileUpload = FileUploadSingle();
+  const fileUpload = FileUploadSingle(prompt);
 
   return (
     <div className="app">
@@ -66,7 +66,7 @@ function App() {
   );
 }
 
-function FileUploadSingle() {
+function FileUploadSingle(prompt) {
   const [file, setFile] = useState(null);
   const [text, setText] = useState("");
 
@@ -79,11 +79,11 @@ function FileUploadSingle() {
     event.preventDefault();
     const formData = new FormData();
     formData.append("pdf", file);
-
     try {
       const response = await axios.post("/upload", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
+          body: prompt,
         },
       });
 
