@@ -38,10 +38,16 @@ app.get("*", (req, res) => {
 });
 
 app.post("/upload", uploadPdf, (req, res) => {
+  const instructions = req.headers.body;
   const buffer = req.file.buffer;
   pdf(buffer).then(async (data) => {
     try {
-      const prompt = `What is the last name of the candidate in the resume listed here: ${data.text}`;
+      let prompt = "";
+      if (instructions) {
+        prompt = instructions + ":" + data.text;
+      } else {
+        prompt = `Summarize the following text in 100 words: ${data.text}`;
+      }
       const response = await openai.createCompletion({
         model: "text-davinci-003",
         prompt: prompt,
@@ -59,8 +65,6 @@ app.post("/upload", uploadPdf, (req, res) => {
     }
   });
 });
-
-//res.send(data.text);
 
 app.post("/ask", async (req, res) => {
   const prompt = req.body.prompt;
