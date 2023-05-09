@@ -46,7 +46,7 @@ app.post("/upload", uploadPdf, (req, res) => {
       if (instructions) {
         prompt = instructions + ":" + data.text;
       } else {
-        prompt = `Summarize the following text in 100 words: ${data.text}`;
+        prompt = `Summarize the following text in one paragraph: ${data.text}`;
       }
       const response = await openai.createCompletion({
         model: "text-davinci-003",
@@ -85,7 +85,6 @@ app.post("/ask", async (req, res) => {
     return res.status(200).json({
       success: true,
       message: completion,
-      all: response.data.choices,
     });
   } catch (error) {
     console.log(error.message);
