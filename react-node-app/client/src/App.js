@@ -51,6 +51,8 @@ function App() {
             },
           });
 
+          console.log(response.data.text);
+
           setText(response.data.text);
           const newBody = {
             prompt: prompt,
@@ -98,9 +100,12 @@ function App() {
 
   return (
     <div className="app">
+      <div className="title">FILEBOT</div>
       <div className="app-container">
+        <div className="answer-container">
+          {!answer ? "Your answer..." : answer}
+        </div>
         <div className="spotlight__wrapper">
-          <div className="answer-container">{answer}</div>
           <div className="prompt-container">
             <input
               type="text"

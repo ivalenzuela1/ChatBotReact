@@ -4,7 +4,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background-color: #859f8e;
+  background-color: #c89666;
 }
 
 .app-container {
@@ -20,6 +20,7 @@
   margin: auto;
   max-width: 600px;
   background-color: #fff;
+  margin-top: 20px;
 }
 
 .spotlight__wrapper:hover,
@@ -88,11 +89,36 @@
 .submit-form {
   float: left;
   background-color: white;
-  height: 40px;
-  padding: 50px;
+  height: 30px;
+  padding-top: 10px;
   position: absolute;
+  border-radius: 12px;
+  border: 1px solid #dfe1e5;
+  margin: auto;
+  max-width: 600px;
+  background-color: #fff;
 }
 
 .answer-container {
-  color: red;
+  color: grey;
+  height: 300px;
+  background-color: aliceblue;
+  /* width: 200px; */
+  align-items: center;
+  margin-bottom: 30px;
+  border-radius: 12px;
+  border: 1px solid #dfe1e5;
+  margin: auto;
+  max-width: 600px;
+  background-color: #fff;
+}
+
+.title {
+  font-size: 36px;
+  font-weight: bold;
+  text-align: center;
+  color: blue;
+  padding: 100px;
+  position: absolute;
+  top: 30px;
 }

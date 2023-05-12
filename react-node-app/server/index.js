@@ -59,7 +59,7 @@ app.post("/ask", async (req, res) => {
     }
 
     if (file) {
-      prompt = `${prompt}. Text: ${file}`;
+      prompt = `${prompt}. Text: ${file.slice(0, 5000)}`;
     }
 
     // trigger OpenAI completion createChatCompletion
