@@ -1,9 +1,11 @@
+/*
 import { useState } from "react";
 import axios from "axios";
 
-function FileUpload(prompt) {
+function FileUpload() {
   const [file, setFile] = useState(null);
   const [text, setText] = useState("");
+  const [answer, setAnswer] = useState(undefined);
 
   const handleChange = (event) => {
     setFile(event.target.files[0]);
@@ -23,15 +25,17 @@ function FileUpload(prompt) {
         },
       });
       setText(response.data.message);
+      setAnswer(response.data.message);
     } catch (error) {
       console.error(error);
     }
   };
+
+  // <button type="submit">Submit</button>
   return (
-    <div>
+    <div className="submit-form">
       <form onSubmit={handleSubmit}>
         <input type="file" name="pdf" onChange={handleChange} />
-        <button type="submit">Submit</button>
       </form>
       {text && <p>{text}</p>}
     </div>
@@ -39,3 +43,21 @@ function FileUpload(prompt) {
 }
 
 export default FileUpload;
+
+*/
+
+/*
+ <form onSubmit={handleSubmit}>
+        <input type="file" name="pdf" onChange={handleChange} />
+        <button type="submit">Submit</button>
+      </form>
+      <IoIosAttach />
+      {text && <p>{text}</p>}
+      <div>test</div>
+
+
+      <div>
+      <input type="file" name="pdf" onChange={handleChange} />
+      <button onClick={handleSubmit}>Search</button>
+    </div>
+      */
