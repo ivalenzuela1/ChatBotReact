@@ -37,42 +37,31 @@ app.get("*", (req, res) => {
   res.sendFile(path.resolve(__dirname, "../client/build", "index.html"));
 });
 
-app.post("/upload", uploadPdf, (req, res) => {
-  const instructions = req.headers.body;
+app.post("/extract", uploadPdf, (req, res) => {
   const buffer = req.file.buffer;
-  pdf(buffer).then(async (data) => {
-    try {
-      let prompt = "";
-      if (instructions) {
-        prompt = instructions + ":" + data.text;
-      } else {
-        prompt = `Summarize the following text in one paragraph: ${data.text}`;
-      }
-      const response = await openai.createCompletion({
-        model: "text-davinci-003",
-        prompt: prompt,
-        temperature: 0,
-        max_tokens: 1000,
-      });
-      const completion = response.data.choices[0].text;
+  if (buffer) {
+    pdf(buffer).then(async (data) => {
       return res.status(200).json({
         success: true,
-        message: completion,
-        all: response.data.choices,
+        text: data.text,
       });
-    } catch (error) {
-      console.log(error.message);
-    }
-  });
+    });
+  }
 });
 
 app.post("/ask", async (req, res) => {
-  const prompt = req.body.prompt;
+  let prompt = req.body.prompt;
+  const file = req.body.text;
 
   try {
     if (prompt == null) {
       throw new Error("Uh oh, no prompt was provided");
     }
+
+    if (file) {
+      prompt = `${prompt}. Text: ${file}`;
+    }
+
     // trigger OpenAI completion createChatCompletion
     const response = await openai.createCompletion({
       model: "text-davinci-003",
@@ -88,6 +77,41 @@ app.post("/ask", async (req, res) => {
     });
   } catch (error) {
     console.log(error.message);
+  }
+});
+
+// DEPRECATED
+app.post("/upload", uploadPdf, (req, res) => {
+  const instructions = req.headers.body;
+  const buffer = req.file.buffer;
+  if (buffer) {
+    pdf(buffer).then(async (data) => {
+      try {
+        let prompt = "";
+        if (instructions) {
+          prompt = instructions + ":" + data.text;
+        } else {
+          prompt = `Summarize the following text in one paragraph: ${data.text}`;
+        }
+        const response = await openai.createCompletion({
+          model: "text-davinci-003",
+          prompt: prompt,
+          temperature: 0,
+          max_tokens: 1000,
+        });
+        const completion = response.data.choices[0].text;
+        return res.status(200).json({
+          success: true,
+          message: completion,
+          all: response.data.choices,
+        });
+      } catch (error) {
+        console.log(error.message);
+      }
+    });
+  } else {
+    // if file is attached then do something else, do something else
+    // create one request structure for both
   }
 });
 
