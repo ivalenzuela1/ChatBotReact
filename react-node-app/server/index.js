@@ -50,8 +50,9 @@ app.post("/extract", uploadPdf, (req, res) => {
 });
 
 app.post("/ask", async (req, res) => {
-  let prompt = req.body.prompt;
+  const promptOriginal = req.body.prompt;
   const file = req.body.text;
+  let prompt = req.body.prompt;
 
   try {
     if (prompt == null) {
@@ -59,7 +60,7 @@ app.post("/ask", async (req, res) => {
     }
 
     if (file) {
-      prompt = `${prompt}. Text: ${file.slice(0, 5000)}`;
+      prompt = `${prompt}. Text: ${file.slice(0, 4000)}`;
     }
 
     // trigger OpenAI completion createChatCompletion
@@ -74,6 +75,7 @@ app.post("/ask", async (req, res) => {
     return res.status(200).json({
       success: true,
       message: completion,
+      question: promptOriginal,
     });
   } catch (error) {
     console.log(error.message);
