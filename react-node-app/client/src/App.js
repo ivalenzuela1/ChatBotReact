@@ -6,11 +6,12 @@ import axios from "axios";
 function App() {
   const [prompt, updatePrompt] = useState(undefined);
   const [loading, setLoading] = useState(false);
-  const [answer, setAnswer] = useState(undefined);
+  const [answer, setAnswer] = useState([]);
   const [file, setFile] = useState(null);
   const [isFileUploadOpen, setFileUploadOpen] = useState(false);
   const [text, setText] = useState(undefined);
   const [placeholder, setPlaceholder] = useState("Ask me anything....");
+  const [renderedItems, setRenderedItems] = useState(undefined);
 
   useEffect(() => {
     if (prompt != null && prompt.trim() === "") {
@@ -38,9 +39,6 @@ function App() {
       };
 
       if (file) {
-        console.log("Use file!!");
-        console.log(file);
-
         event.preventDefault();
         const formData = new FormData();
         formData.append("pdf", file);
@@ -50,8 +48,6 @@ function App() {
               "Content-Type": "multipart/form-data",
             },
           });
-
-          console.log(response.data.text);
 
           setText(response.data.text);
           const newBody = {
@@ -65,17 +61,34 @@ function App() {
         }
       }
 
-      //  requestOptions["fileText"] = text;
-
-      console.log("this is the request");
       const res = await fetch("/ask", requestOptions);
 
       if (!res.ok) {
         throw new Error("Something went wrong");
       }
 
-      const { message } = await res.json();
-      setAnswer(message);
+      const { message, question } = await res.json();
+      let updatedValue = {};
+      updatedValue = {
+        ques: question,
+        ans: message,
+      };
+
+      setAnswer(() => [...answer, updatedValue]);
+      setAnswer((answer) => {
+        const answerHtml = answer.map((item) => {
+          return (
+            <div key={Math.random()}>
+              <div key={item.ques} className="question">
+                {item.ques}
+              </div>
+              <div key={item.ans}>{item.ans}</div>
+            </div>
+          );
+        });
+        setRenderedItems(answerHtml);
+        return answer;
+      });
     } catch (err) {
       console.error(err, "err");
     } finally {
@@ -97,13 +110,14 @@ function App() {
   //<div>{fileUpload(prompt)}</div>
   // <div>{fileOpenHtml}</div>
   // {text && <p>{text}</p>}
+  // test
 
   return (
     <div className="app">
       <div className="title">FILEBOT</div>
       <div className="app-container">
         <div className="answer-container">
-          {!answer ? "Your answer..." : answer}
+          {!renderedItems ? "Your answer..." : renderedItems}
         </div>
         <div className="spotlight__wrapper">
           <div className="prompt-container">
